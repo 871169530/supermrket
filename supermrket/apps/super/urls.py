@@ -1,10 +1,10 @@
 
 from django.conf.urls import url
 
-from super.views import login, cs, reg
+from super.views import cs, RegisterView, LoginView, member
 
 urlpatterns = [
-    url(r'^login/$', login, name='login'),
-    url(r'^reg/$', reg, name='reg'),
-    url(r'^cs/$', cs, name='cs'),
+    url(r'^login/$', LoginView.as_view(), name='login'),
+    url(r'^reg/$', RegisterView.as_view(), name='register'),
+    url(r'^member/$', member, name='member'),
 ]

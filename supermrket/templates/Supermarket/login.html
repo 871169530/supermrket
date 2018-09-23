@@ -1,8 +1,18 @@
 {% extends "public/base.html" %}
 {% load static %}
+{% block meta_css %}
+    <style>
+    .errornote{
+        color:red;
+    }
+    </style>
+{% endblock %}
 
 
 {% block content_nav %}
+
+    <form action="" method="post" novalidate>
+    {% csrf_token %}
     <header data-am-widget="header" class="am-header am-header-default sq-head ">
         <div class="am-header-left am-header-nav">
             <a href="javascript:history.back()" class="">
@@ -18,11 +28,16 @@
         <img src="images/logo.png" />
     </div>-->
     <div style="height: 3rem;"></div>
-    <input type="text" name="mobile" id="mobile" placeholder="请输入用户名/手机号" class="login-name">
-    <input type="password" name="password" id="password" placeholder="请输入密码" class="login-password">
-    <a href="{% url 'super:cs' %}"><input type="button" class="login-btn" value="我要登录"></a>
+    {{ form.phone }}
+        <p class="errornote">{{ form.errors.phone.0 }}</p>
+    {{ form.password }}
+        <p class="errornote">{{ form.errors.password.0 }}</p>
+    <input type="submit" class="login-btn" value="我要登录">
+
+    </form>
+
     <div class="agree">
-        <a href="{% url 'super:reg' %}">免费注册</a>
+        <a href="{% url 'super:register' %}">免费注册</a>
         <a href="" class="forget">忘记密码？</a>
     </div>
     <div class="line"></div>
