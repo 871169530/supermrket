@@ -2,10 +2,14 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views import View
+from db.base_view import BaseVerifyView
 from super.forms import RegisterForm, LoginForm
 
 
 # Create your views here.
+
+# 登录
+# from super.helper import verify_login_required
 
 
 class LoginView(View):
@@ -16,7 +20,12 @@ class LoginView(View):
     def post(self, request):
         login_from = LoginForm(request.POST)
         if login_from.is_valid():
-            return redirect(reverse('super:member'))
+            user = login_from.cleaned_data.get('user')
+            request.session['ID'] = user.pk
+            request.session['phone'] = user.phone
+            request.session.set_expiry(0)
+
+            return redirect(reverse('super:center'))
         return render(request, 'Supermarket/login.html', {'form': login_from})
 
 
@@ -42,9 +51,29 @@ class RegisterView(View):
         return render(request, 'Supermarket/reg.html', {'form': form})
 
 
-def member(request):
-    return render(request, 'Supermarket/member.html')
+class CenterView(BaseVerifyView):
+    def get(self, request):
+        phone = request.session.get('phone')
+        context = {
+            'phone': phone
+        }
+        return render(request, 'Supermarket/member.html', context)
 
 
-def cs(request):
-    return HttpResponse('ok')
+class InforView(BaseVerifyView):
+    def get(self, request):
+        # 验证用户是否登录
+        # 判断 session
+        # user_id = request.session.get('ID')
+        # if user_id is None:
+        #     # 没有登录转到登录页面
+        #     return redirect(reverse('super:login'))
+        return render(request, 'Supermarket/infor.html')
+
+    # @method_decorator(verify_login_required)
+    # def dispatch(self, request, *args, **kwargs):
+    #     return super().dispatch(request, *args, **kwargs)
+
+# @verify_login_required
+# def info(request):
+#     return render(request, 'Supermarket/infor.html')
