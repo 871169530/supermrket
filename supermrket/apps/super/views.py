@@ -1,15 +1,15 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views import View
 from db.base_view import BaseVerifyView
 from super.forms import RegisterForm, LoginForm
 
-
 # Create your views here.
 
 # 登录
 # from super.helper import verify_login_required
+from super.models import Users
 
 
 class LoginView(View):
@@ -43,7 +43,11 @@ class RegisterView(View):
         # 接收数据
         # 处理数据
         # 响应
+        session_code = request.session.get('random_code')
         form = RegisterForm(request.POST)
+        data = request.POST.dict()
+        data['session_code'] = session_code
+        form = RegisterForm(data)
         if form.is_valid():
             form.save()
             # 注册成功，跳转
@@ -74,6 +78,38 @@ class InforView(BaseVerifyView):
     # def dispatch(self, request, *args, **kwargs):
     #     return super().dispatch(request, *args, **kwargs)
 
+
 # @verify_login_required
 # def info(request):
 #     return render(request, 'Supermarket/infor.html')
+
+
+class SendCodeView(View):
+    # 发送短信验证码
+    def post(self, request):
+        # 接收
+        phone = request.POST.get("tel", "")
+        # 处理
+        import re
+
+        phone_re = re.compile("^1[3-9]\d{9}$")
+        res = re.search(phone_re, phone)
+        if res is None:
+            # 手机号码格式错误
+            return JsonResponse({"status": "400", "msg": "手机号码格式错误"})
+
+        res = Users.objects.filter(phone=phone).exists()
+        if res:
+            # 手机号码格式错误
+            return JsonResponse({"status": "400", "msg": "手机号码已经注册"})
+        # 生成随机验证码
+        import random
+        random_code = "".join([str(random.randint(0, 9)) for _ in range(4)])
+        # 模拟发送
+        print("=code={}=".format(random_code))
+
+        request.session['random_code'] = random_code
+        request.session.set_expiry(60)
+
+        # 响应
+        return JsonResponse({"status": "200"})
