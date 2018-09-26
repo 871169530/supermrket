@@ -16,7 +16,15 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 
+from good.views import IndexView
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^supermrket/', include('super.urls', namespace='super')),
+    url(r'^super/', include('super.urls', namespace='super')),
+    url(r'^good/', include('good.urls', namespace='good')),
+    url(r'^ckeditor/', include("ckeditor_uploader.urls")),
+    # 全文搜索框架
+    url(r'^search/', include('haystack.urls')),
+    # 添加自己的应用的子路由
+    url(r'^$', IndexView.as_view(), name='商城首页')
 ]

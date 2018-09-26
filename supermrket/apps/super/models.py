@@ -28,6 +28,10 @@ class Users(BaseModel):
                                       default=3,
                                       choices=sex_choices,
                                       )
+    head = models.ImageField(verbose_name='用户头像',
+                             upload_to='head/%Y/%m',
+                             default='user/201809/25/B.jpg'
+                             )
 
     birthday = models.DateField(verbose_name='出生日期',
                                 null=True,
@@ -54,3 +58,7 @@ class Users(BaseModel):
 
     def __str__(self):
         return self.phone
+
+
+class TestImageModel(models.Model):
+    head = models.ImageField(upload_to='user/%Y%m/%d',verbose_name='用户头像')

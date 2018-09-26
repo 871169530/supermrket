@@ -58,8 +58,11 @@ class RegisterView(View):
 class CenterView(BaseVerifyView):
     def get(self, request):
         phone = request.session.get('phone')
+        user_id = request.session.get('ID')
+        user = Users.objects.filter(pk=user_id).first()
         context = {
-            'phone': phone
+            'phone': phone,
+            'user': user
         }
         return render(request, 'Supermarket/member.html', context)
 
@@ -68,20 +71,34 @@ class InforView(BaseVerifyView):
     def get(self, request):
         # 验证用户是否登录
         # 判断 session
-        # user_id = request.session.get('ID')
+        user_id = request.session.get('ID')
+        user = Users.objects.filter(pk=user_id).first()
+        context = {
+            'user': user
+        }
         # if user_id is None:
         #     # 没有登录转到登录页面
         #     return redirect(reverse('super:login'))
-        return render(request, 'Supermarket/infor.html')
+        return render(request, 'Supermarket/infor.html', context)
 
     # @method_decorator(verify_login_required)
     # def dispatch(self, request, *args, **kwargs):
     #     return super().dispatch(request, *args, **kwargs)
 
-
-# @verify_login_required
-# def info(request):
-#     return render(request, 'Supermarket/infor.html')
+    # @verify_login_required
+    # def info(request):
+    #     return render(request, 'Supermarket/infor.html')
+    def post(self, request):
+        # 接收数据
+        user_id = request.session.get('ID')
+        data = request.POST
+        file = request.FILES['head']
+        # 处理数据
+        user = Users.objects.get(pk=user_id)
+        user.head = file
+        user.save()
+        # 响应
+        return redirect(reverse('super:center'))
 
 
 class SendCodeView(View):
