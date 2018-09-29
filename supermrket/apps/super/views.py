@@ -23,9 +23,15 @@ class LoginView(View):
             user = login_from.cleaned_data.get('user')
             request.session['ID'] = user.pk
             request.session['phone'] = user.phone
+            # session有效期，浏览器关闭就从新登录
             request.session.set_expiry(0)
 
+            # 跳转到用户中心
+            # 获取跳转位置
+            if request.GET.get('next',None):
+                return redirect(request.GET.get('next'))
             return redirect(reverse('super:center'))
+        # 验证失败
         return render(request, 'Supermarket/login.html', {'form': login_from})
 
 

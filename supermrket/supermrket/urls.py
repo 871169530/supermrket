@@ -22,6 +22,8 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^super/', include('super.urls', namespace='super')),
     url(r'^good/', include('good.urls', namespace='good')),
+    url(r'^shopcart/', include('shopcart.urls', namespace='shopcart')),
+    url(r'^order/', include('order.urls', namespace='order')),
     url(r'^ckeditor/', include("ckeditor_uploader.urls")),
     # 全文搜索框架
     url(r'^search/', include('haystack.urls')),

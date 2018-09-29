@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'haystack',  # 搜索引擎框架
     'super',  # 用户模块
     'good',  # 商品模块
+    'shopcart',  # 购物车模块
     'ckeditor',  # 添加ckeditor富文本编辑器
     'ckeditor_uploader',  # 添加ckeditor富文本编辑器文件上传部件
 ]
@@ -127,6 +128,21 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
 # STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
+
+# 七牛云配置 上传图片
+# 七牛云密钥等配置
+# QINIU_ACCESS_KEY = 'Ww_JUcNipEhvmJ_GrevI5BM42o6gEpQiP3C96E__'
+# QINIU_SECRET_KEY = 'Z_ECCHgac1IdiOnMVsb5InVSaKLDsVW-LuXy_xrm'
+# QINIU_BUCKET_NAME = 'image'
+# QINIU_BUCKET_DOMAIN = 'pfntakdjz.bkt.clouddn.com/'
+# QINIU_SECURE_URL = False  # 使用http
+# PREFIX_URL = 'http://'
+#
+# # 上传文件地址配置
+# MEDIA_URL = PREFIX_URL + QINIU_BUCKET_DOMAIN + "/"
+# # 上传文件的存储引擎配置
+# DEFAULT_FILE_STORAGE = 'qiniustorage.backends.QiniuStorage'
 
 MEDIA_URL = '/static/media/'
 
